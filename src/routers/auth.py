@@ -67,11 +67,11 @@ async def login(payload: LoginRequest, db: AsyncSession = Depends(get_db)):
 
 @router.get("/me", response_model=UserResponse)
 
-async def say_hi(current_user: User = Depends(get_current_user_required)):
-    return {"message": f"Привлет, мой дорогой друг {current_user.username}! Желаю тебе хорошего дня!"}
-
 async def get_me(current_user: User = Depends(get_current_user_required)):
     return current_user
+
+async def say_hi(current_user: User = Depends(get_current_user_required)):
+    return {"message": f"Привлет, мой дорогой друг {current_user.username}! Желаю тебе хорошего дня!"}
 
 @router.post("/me/favorite-word", response_model=UserResponse)
 async def set_favorite_word(

@@ -7,7 +7,7 @@ from sqlalchemy import select
 from src.models.user import User
 from src.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__truncate_error=False)
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 def verify_password(plain: str, hashed: str) -> bool:
