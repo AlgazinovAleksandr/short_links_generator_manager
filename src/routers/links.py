@@ -3,7 +3,7 @@
 
 import uuid
 from datetime import datetime, timezone
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -34,6 +34,7 @@ def print_something_funny():
 @router.post("/shorten", response_model=LinkResponse, status_code=status.HTTP_201_CREATED)
 async def shorten_link(
     payload: LinkCreate,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user_optional),
 ):
@@ -59,7 +60,9 @@ async def shorten_link(
     await db.refresh(link)
     ttl = compute_cache_ttl(link, settings.CACHE_TTL)
     await cache_link(short_code, str(payload.original_url), ttl)
-    return link
+    response = LinkResponse.model_validate(link)
+    response.short_url = f"{request.base_url}links/{link.short_code}"
+    return response
 
 @router.get("/search", response_model=LinkResponse)
 async def search_by_original_url(
