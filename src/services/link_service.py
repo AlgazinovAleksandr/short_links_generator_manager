@@ -28,8 +28,8 @@ async def get_link_by_short_code(db: AsyncSession, short_code: str) -> Optional[
     return result.scalar_one_or_none()
 
 async def get_link_by_original_url(db: AsyncSession, original_url: str) -> Optional[Link]:
-    result = await db.execute(select(Link).where(Link.original_url == original_url))
-    return result.scalar_one_or_none()
+    result = await db.execute(select(Link).where(Link.original_url == original_url).order_by(Link.created_at.desc()))
+    return result.scalars().first()
 
 def is_link_expired(link: Link) -> bool:
     if link.expires_at is None:
