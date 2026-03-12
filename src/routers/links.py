@@ -44,6 +44,8 @@ async def shorten_link(
         short_code = payload.custom_alias
     else:
         short_code = await create_unique_short_code(db)
+        if current_user and current_user.favorite_word:
+            short_code = current_user.favorite_word + short_code
 
     link = Link(
         original_url=str(payload.original_url),
@@ -130,11 +132,6 @@ async def redirect_to_url(short_code: str, db: AsyncSession = Depends(get_db)):
         ttl = compute_cache_ttl(link, settings.CACHE_TTL)
         await cache_link(short_code, redirect_url, ttl)
 
-    # Если есть любимое слово, давайте его применим!
-    if link.user_id:
-        user = await db.get(User, link.user_id)
-        if user and user.favorite_word:
-            redirect_url = apply_favorite_word(redirect_url, user.favorite_word)
     return RedirectResponse(url=redirect_url, status_code=status.HTTP_302_FOUND)
 
 
