@@ -18,7 +18,7 @@ http://localhost:8000/links/{short_code}
 Краткий старт: 
 
 - клонировать репозиторий: git clone https://github.com/AlgazinovAleksandr/short_links_generator_manager.git 
-- запустить сервис через Docker docker compose up --build
+- запустить сервис через Docker: docker compose up --build
 - и открыть http://localhost:8000/docs
 - можно еще звездочку на репозиторий поставить I WANNA BE A SUPERSTAR:)
 
@@ -29,8 +29,11 @@ http://localhost:8000/links/{short_code}
 #### 1. Фкнкционал коротких ссылок
 
 | Метод | Эндпоинт | Описание |
+
 | POST | /links/shorten | Создать короткую ссылку |
+
 | PUT | /links/{short_code} | Обновить оригинальный URL или переименовать код ссылки |
+
 | DELETE | /links/{short_code} | Удалить ссылку |
 
 Изменение и удаление доступны только авторизованному владельцу ссылки
@@ -58,7 +61,9 @@ GET /links/search?original_url={url}
 #### Favorite Word — любимое слово в коде ссылки
 
 | Метод | Эндпоинт | Описание |
+
 | POST | /auth/me/favorite-word | Установить любимое слово |
+
 | DELETE | /auth/me/favorite-word | Сбросить любимое слово |
 
 Если у авторизованного пользователя задано любимое слово, оно автоматически добавляется в начало каждого нового сгенерированного short_code. Например, если слово SPONGEBOB, то код ссылки будет SPONGEBOBabc123 (например, ведь оставшаяся часть кода генерируется автоматически). На кастомные алиасы не влияет.
@@ -90,24 +95,38 @@ GET /extras/secret-url
 ## Регистрация и аутентификация
 
 | Метод | Эндпоинт | Описание |
+
 | POST | /auth/register | Зарегистрировать пользователя |
+
 | POST | /auth/login | Войти и получить JWT-токен |
+
 | GET | /auth/me | Получить профиль текущего пользователя |
 
 Аутентификация реализована через JWT (Bearer-токен). Токен передаётся в заголовке Authorization: Bearer <token>.
 
 Краткая структура репозитория: 
 src - весь код приложения
+
 alembic - Миграции базы данных
+
 testing - тесты (TBA)
+
 docker-compose.yml - поднять всё окружение одной командой (МОТИВАЦИЮ НАДО ПОДНЯТЬ, ОКРУЖЕНИЕ ТОЖЕ)
+
 Dockerfile - инструкция для сборки образа приложения
+
 requirements.txt - ну это и так понятно
+
 alembic.ini конфиг для инструмента миграций
+
 pytest.ini - конфиг для тест-раннера (TBA)
+
 .env - куда идем мы со свиньей и что храним мы в дот енве - большой большой секрет
+
 .env.example - пример наших секретов
+
 jokes.md - база анекдотов для /extras/joke эндпоинта (лично собирал!!!!)
+
 FastAPI_project.ipynb / FastAPI_testing.ipynb - то, с чего весь этот прекрасный ужас начался
 
 Стэк: Python, FastAPI, PostgreSQL, SQLAlchemy (async), Redis, Alembic, Docker, JWT, Pydantic
