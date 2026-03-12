@@ -61,7 +61,7 @@ async def register(payload: UserCreate, db: AsyncSession = Depends(get_db)):
 async def login(payload: LoginRequest, db: AsyncSession = Depends(get_db)):
     user = await authenticate_user(db, payload.username, payload.password)
     if not user:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(status_code=401, detail="Неверный логин или пароль")
     token = create_access_token({"sub": user.username})
     return Token(access_token=token)
 

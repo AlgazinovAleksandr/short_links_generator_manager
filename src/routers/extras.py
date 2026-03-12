@@ -29,4 +29,4 @@ async def self_promotion():
 @router.get("/secret-url")
 async def secret_url():
     """Что же это?"""
-    return RedirectResponse(url=RICKROLL_URL, status_code=302)
+    return {"message": "Check it out :)", "url": RICKROLL_URL}

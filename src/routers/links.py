@@ -102,7 +102,7 @@ async def get_qr_code(short_code: str, db: AsyncSession = Depends(get_db)):
     return StreamingResponse(buf, media_type="image/png")
 
 # Hi
-@router.get("/{short_code}")
+@router.get("/{short_code}", description="Не тестируй этот метод через UI (метод нужен чисто для внутреннего пользования!)")
 async def redirect_to_url(short_code: str, db: AsyncSession = Depends(get_db)):
     cached_url = await get_cached_link(short_code)
     if cached_url:
