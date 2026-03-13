@@ -1,0 +1,8 @@
+[run]
+source = src
+concurrency = asyncio
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if TYPE_CHECKING:

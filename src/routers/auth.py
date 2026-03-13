@@ -69,7 +69,9 @@ async def login(payload: LoginRequest, db: AsyncSession = Depends(get_db)):
 async def get_me(current_user: User = Depends(get_current_user_required)):
     return current_user
 
-async def say_hi(current_user: User = Depends(get_current_user_required)):
+# Эта функция написана забавы ради, и нигде не используется. Поэтому она недостижима через HTTP и никогда не вызывается ни в коде, ни в тестах
+# Соответственно, добавим для нее pragma no cover, чтобы на нее не ругались во время тестов)
+async def say_hi(current_user: User = Depends(get_current_user_required)):  # pragma: no cover
     return {"message": f"Привлет, мой дорогой друг {current_user.username}! Желаю тебе хорошего дня!"}
 
 @router.post("/me/favorite-word", response_model=UserResponse)

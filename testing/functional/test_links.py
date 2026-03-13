@@ -100,7 +100,16 @@ async def test_search_not_found(async_client: AsyncClient):
     resp = await async_client.get("/links/search", params={"original_url": "https://somesomenonnonexistingurllllll.com/"})
     assert resp.status_code == 404
 
-async def test_update_link_authenticated(async_client: AsyncClient, registered_user: dict, auth_headers: dict):
+
+async def test_search_expired_link(async_client: AsyncClient):
+    await async_client.post("/links/shorten", json={
+        "original_url": "https://www.expiredlink.com/",
+        "expires_at": "2000-01-01T00:00:00Z",
+    })
+    resp = await async_client.get("/links/search", params={"original_url": "https://www.expiredlink.com/"})
+    assert resp.status_code == 404
+
+async def test_update_link_authenticated(async_client: AsyncClient, auth_headers: dict):
     create_resp = await async_client.post(
         "/links/shorten",
         json={"original_url": "https://alembic.sqlalchemy.org/en/notlatest/"},
@@ -136,7 +145,7 @@ async def test_update_link_wrong_user(async_client: AsyncClient, auth_headers: d
     assert resp.status_code == 403
 
 
-async def test_delete_link_authenticated(async_client: AsyncClient, registered_user: dict, auth_headers: dict):
+async def test_delete_link_authenticated(async_client: AsyncClient, auth_headers: dict):
     create_resp = await async_client.post(
         "/links/shorten",
         json={"original_url": "https://en.wikipedia.org/wiki/Docker_(software)"},

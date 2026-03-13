@@ -81,3 +81,9 @@ async def test_reset_favorite_word(async_client: AsyncClient, registered_user: d
 async def test_set_favorite_word_unauthenticated(async_client: AsyncClient):
     resp = await async_client.post("/auth/me/favorite-word", json={"word": "INDIANFOOD"})
     assert resp.status_code == 401
+
+
+# невалидный токен - тоже не пустим
+async def test_get_me_invalid_token(async_client: AsyncClient):
+    resp = await async_client.get("/auth/me", headers={"Authorization": "Bearer thisisnotavalidjwt"})
+    assert resp.status_code == 401
