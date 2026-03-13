@@ -65,3 +65,5 @@ def test_compute_cache_ttl_default_sooner():
     link.expires_at = datetime.now(timezone.utc) + timedelta(hours=2)
     ttl = compute_cache_ttl(link, 3600)
     assert ttl == 3600
+
+# а потом еще и спросил, где туалет!
