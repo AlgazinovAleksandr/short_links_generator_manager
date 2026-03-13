@@ -67,6 +67,7 @@ async def shorten_link(
 @router.get("/search", response_model=LinkResponse)
 async def search_by_original_url(
     original_url: str,
+    request: Request,
     db: AsyncSession = Depends(get_db),
 ):
     link = await get_link_by_original_url(db, original_url)
@@ -75,7 +76,9 @@ async def search_by_original_url(
     if is_link_expired(link):
         await db.delete(link)
         raise HTTPException(status_code=404, detail="Вышел срок годности ссылки")
-    return link
+    response = LinkResponse.model_validate(link)
+    response.short_url = f"{request.base_url}links/{link.short_code}"
+    return response
 
 @router.get("/{short_code}/stats", response_model=LinkStats)
 async def get_stats(short_code: str, db: AsyncSession = Depends(get_db)):
@@ -142,6 +145,7 @@ async def redirect_to_url(short_code: str, db: AsyncSession = Depends(get_db)):
 async def update_link(
     short_code: str,
     payload: LinkUpdate,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user_required),
 ):
@@ -165,7 +169,9 @@ async def update_link(
     ttl = compute_cache_ttl(link, settings.CACHE_TTL)
     await cache_link(link.short_code, link.original_url, ttl)
     await db.refresh(link)
-    return link
+    response = LinkResponse.model_validate(link)
+    response.short_url = f"{request.base_url}links/{link.short_code}"
+    return response
 
 @router.delete("/{short_code}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_link(

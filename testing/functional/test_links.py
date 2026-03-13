@@ -19,7 +19,7 @@ async def test_shorten_link_with_custom_alias(async_client: AsyncClient):
     assert resp.status_code == 201
     assert resp.json()["short_code"] == "MYNAMEISPATRICK"
 
-
+# у меня тут прикольные слова и ссылки, потому что все делается от души!
 async def test_shorten_link_duplicate_alias(async_client: AsyncClient):
     await async_client.post("/links/shorten", json={
         "original_url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B2%D0%B8%D0%BD%D1%8B%D0%B5",
@@ -94,7 +94,10 @@ async def test_search_by_original_url(async_client: AsyncClient):
     await async_client.post("/links/shorten", json={"original_url": "https://www.postgresql.org/"})
     resp = await async_client.get("/links/search", params={"original_url": "https://www.postgresql.org/"})
     assert resp.status_code == 200
-    assert resp.json()["original_url"] == "https://www.postgresql.org/"
+    data = resp.json()
+    assert data["original_url"] == "https://www.postgresql.org/"
+    assert data["short_url"] is not None
+    assert data["short_code"] in data["short_url"]
 
 async def test_search_not_found(async_client: AsyncClient):
     resp = await async_client.get("/links/search", params={"original_url": "https://somesomenonnonexistingurllllll.com/"})
@@ -123,7 +126,10 @@ async def test_update_link_authenticated(async_client: AsyncClient, auth_headers
         headers=auth_headers,
     )
     assert resp.status_code == 200
-    assert resp.json()["original_url"] == "https://alembic.sqlalchemy.org/en/latest/"
+    data = resp.json()
+    assert data["original_url"] == "https://alembic.sqlalchemy.org/en/latest/"
+    assert data["short_url"] is not None
+    assert short_code in data["short_url"]
 
 
 async def test_update_link_unauthenticated(async_client: AsyncClient):
@@ -225,8 +231,12 @@ async def test_update_link_new_short_code(async_client: AsyncClient, auth_header
         headers=auth_headers,
     )
     assert resp.status_code == 200
-    assert resp.json()["short_code"] == "NEWCODE"
-    # старый short code должен перестать работать
+    data = resp.json()
+    assert data["short_code"] == "NEWCODE"
+    # short_url должен отражать новый код
+    assert data["short_url"] is not None
+    assert "NEWCODE" in data["short_url"]
+    # и по новому коду ссылка должна находиться
     stats_resp = await async_client.get("/links/NEWCODE/stats")
     assert stats_resp.status_code == 200
 
