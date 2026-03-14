@@ -5,7 +5,7 @@ _redis_client: Optional[aioredis.Redis] = None
 
 async def get_redis() -> aioredis.Redis:
     global _redis_client
-    if _redis_client is None:
+    if _redis_client is None:  # pragma: no cover — в тестах реальный клиент не создаётся
         _redis_client = aioredis.from_url(settings.REDIS_URL, decode_responses=True)
     return _redis_client
 

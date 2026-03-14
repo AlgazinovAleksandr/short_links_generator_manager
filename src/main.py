@@ -2,8 +2,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from src.routers import auth, links, extras
 
+# pragma: no cover, так как код после yield выполняется только при завершении работы приложения (shutdown)
+# А в тестах приложение не останавливается штатно, поэтому тесты не покрывают этот код
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI):  # pragma: no cover
     yield
     from src import cache as cache_module
     if cache_module._redis_client is not None:

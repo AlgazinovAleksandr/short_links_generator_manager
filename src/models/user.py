@@ -9,9 +9,11 @@ import random
 if TYPE_CHECKING:
     from src.models.link import Link
 
-def generate_random_number():
+# pragma: no cover — это функция, как и куча других, написана для развлечения и нигде в коде не вызывается
+def generate_random_number():  # pragma: no cover
     """"These files are so boring by default, let's add something funny!"""
     return random.randint(1, 100)
+
 class User(Base):
     __tablename__ = "users"
     id: Mapped[uuid.UUID] = mapped_column(GUID(), primary_key=True, default=uuid.uuid4)

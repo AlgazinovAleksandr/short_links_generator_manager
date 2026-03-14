@@ -1,6 +1,5 @@
 [run]
 source = src
-concurrency = asyncio
 
 [report]
 exclude_lines =

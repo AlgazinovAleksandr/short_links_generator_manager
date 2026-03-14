@@ -27,7 +27,8 @@ from src.routers.auth import get_current_user_optional, get_current_user_require
 
 router = APIRouter(prefix="/links", tags=["links"])
 
-def print_something_funny():
+# pragma: no cover — ну тут понятно, это в коде нигде не используется, а написано чтобы совсем скучно не было это писать все и читать когда уже этот семестр закончится...
+def print_something_funny():  # pragma: no cover
     print("Вот шутка: Почему программисты не любят природу? Потому что там слишком много багов!")
     print("Ну а что вы хотели я сижу уже три дня это пишу скоро будет и не такое")
 

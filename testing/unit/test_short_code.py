@@ -1,6 +1,10 @@
 import pytest
-from src.services.link_service import generate_short_code, SHORT_CODE_LENGTH, ALPHABET, apply_favorite_word, is_link_expired, compute_cache_ttl
+import uuid
+from unittest.mock import patch, MagicMock, AsyncMock
+from sqlalchemy.ext.asyncio import AsyncSession
+from src.services.link_service import generate_short_code, SHORT_CODE_LENGTH, ALPHABET, apply_favorite_word, is_link_expired, compute_cache_ttl, create_unique_short_code, get_link_by_short_code, get_link_by_original_url
 from src.models.link import Link
+from src.models.base import GUID
 from datetime import datetime, timezone, timedelta
 
 
