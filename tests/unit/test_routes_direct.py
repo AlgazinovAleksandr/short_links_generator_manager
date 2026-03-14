@@ -1,3 +1,5 @@
+# функционального тестирования роутеров было недостаточно
+# поэтому добавил тесты на функции роутеров без HTTP слоя (то есть конкретно юнит-тестирование вот этого вот всего)
 import pytest
 import src.cache as cache_module
 from unittest.mock import MagicMock
@@ -192,7 +194,7 @@ async def test_update_link_route_direct(db: AsyncSession, redis_setup):
     user = await register(UserCreate(username="michaeljackson", email="michaeljackson@example.com", password="pass"), db)
     link = await shorten_link(LinkCreate(original_url="https://alembic.sqlalchemy.org/en/notlatest/"), make_request(), db, user)
     result = await update_link(link.short_code, LinkUpdate(original_url="https://alembic.sqlalchemy.org/en/latest/"), make_request(), db, user)
-    assert result.original_url == "https://new.test.com"
+    assert result.original_url == "https://alembic.sqlalchemy.org/en/latest/"
 
 
 async def test_update_link_new_code_route_direct(db: AsyncSession, redis_setup):
